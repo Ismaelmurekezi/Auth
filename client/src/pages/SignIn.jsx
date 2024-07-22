@@ -6,6 +6,7 @@ import {
   signInSuccess,
 } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
@@ -48,22 +49,23 @@ const SignIn = () => {
           type="email"
           placeholder="email"
           id="email"
-          className="bg-slate-100 p-3 rounded-lg"
+          className="border-2 border-slate-400 p-3 rounded-xl"
           onChange={handleChange}
         />
         <input
           type="password"
           placeholder="password"
           id="password"
-          className="bg-slate-100 p-3 rounded-lg"
+          className="border-2 border-slate-400 p-3 rounded-xl"
           onChange={handleChange}
         />
         <button
           disabled={loading}
-          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+          className="bg-blue-600 text-white p-3 rounded-lg uppercase hover:opacity-90 disabled:opacity-80"
         >
           {loading ? "Loading" : "Sign In"}
         </button>
+        <OAuth />
       </form>
 
       <div className="flex gap-2 mt-5">
@@ -72,7 +74,9 @@ const SignIn = () => {
           <span className="text-blue-500">Sign Up</span>
         </Link>
       </div>
-      <p className="text-red-500">{error ?error.message || "Something went wrong": " "}</p>
+      <p className="text-red-500">
+        {error ? error.message || "Something went wrong" : " "}
+      </p>
     </div>
   ); 
 };

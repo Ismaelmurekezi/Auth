@@ -8,6 +8,10 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase";
 import {
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  signOut,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
@@ -20,9 +24,9 @@ const Profile = () => {
   const [imagePercent, setImagePercent] = useState(0);
   const [imageError, setimageError] = useState(false);
   const [formData, setformData] = useState({});
-  const [updateSuccess,setupdateSuccess]=useState(false)
+  const [updateSuccess, setupdateSuccess] = useState(false);
 
-  const { currentUser,loading,error } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (image) {
@@ -74,15 +78,37 @@ const Profile = () => {
         return;
       }
       dispatch(updateUserSuccess(data));
-      setupdateSuccess(true)
+      setupdateSuccess(true);
     } catch (error) {
       dispatch(updateUserFailure(error));
     }
   };
 
+  const handleDeleteAccount = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error));
+    }
+  };
 
-
-
+  const handleSignout = async () => {
+    try {
+      await fetch("/api/auth/logout");
+      dispatch(signOut());
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -142,10 +168,16 @@ const Profile = () => {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="bg-[#ee0404] text-white cursor-pointer px-4 py-2 rounded-xl ">
+        <span
+          onClick={handleDeleteAccount}
+          className="bg-[#ee0404] text-white cursor-pointer px-4 py-2 rounded-xl "
+        >
           Delete Account
         </span>
-        <span className="text-[#ee0404] border-2 border-[#ee0404] cursor-pointer px-4 py-2  rounded-xl">
+        <span
+          onClick={handleSignout}
+          className="text-[#ee0404] border-2 border-[#ee0404] cursor-pointer px-4 py-2  rounded-xl"
+        >
           Sign out
         </span>
       </div>

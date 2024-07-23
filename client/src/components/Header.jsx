@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Header = () => {
@@ -25,7 +25,9 @@ const Header = () => {
                 className="w-7 h-7 rounded-full object-cover"
               />
             ) : (
-              <li>Sign In</li>
+              <Link to="/signin"> 
+                <li>Sign In</li>
+              </Link>
             )}
           </Link>
         </ul>
